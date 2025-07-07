@@ -46,9 +46,10 @@ export const deleteProduct = async (req, res) => {
 export const updateProduct = async (req, res) => {
     const { id } = req.params;
     const product = req.body;
-
-    if (!product.name || !product.price || !product.image) {
-        return res.status(400).json({ success: false, message: " provide all fields"})
+    
+    // Validate the ID format
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(400).json({ success: false, message: "Invalid product ID" });
     }
 
     try {
