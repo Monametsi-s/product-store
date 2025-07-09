@@ -6,9 +6,12 @@ import {
   Button,
   Heading,
   useColorModeValue,
+  Input,
+  useToast
 } from "@chakra-ui/react";
 import { useState } from "react";
-// import { useProductStore } from "../store/product";
+import { useProductStore } from "../store/product";
+
 
 const CreatePage = () => {
   const [newProduct, setNewProduct] = useState({
@@ -16,33 +19,33 @@ const CreatePage = () => {
     price: "",
     image: "",
   });
-  // const toast = useToast();
-
-  // const { createProduct } = useProductStore();
+  const toast = useToast();
+  const { createProduct } = useProductStore();
 
   const handleAddProduct = async () => {
-    console.log(newProduct);
-    //   const { success, message } = await creatreProduct(newProduct);
-    //   if (!success) {
-    //     toast({
-    //       title: "Error",
-    //       description: message,
-    //       status: "error",
-    //       isClosable: true,
-    //     });
-    //   }
-    //   else {
-    //     toast({
-    //       title: "Success",
-    //       description: message,
-    //       status: "success",
-    //       isClosable: true,
-    //     });
-    //   }
-
-    //   setNewProduct({ name: "", price: "", image: "" });
-  };
-
+    const { success, message } = await createProduct(newProduct);
+		console.log("Success", success);
+		console.log("Message", message);
+    if (!success) {
+      toast({
+        title: "Error", // Not that necessary
+        description: message,
+        status: "error",// Error, info, warning or success
+        duration: 3000, // Duration in milliseconds
+        isClosable: true, // Whether the toast can be closed by the user
+      })
+    } else {
+      toast({
+        title: "Success",
+        description: "Product created successfully",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      })
+    }
+    setNewProduct({ name: "", price: "", image: "" });
+  }
+  
   return (
     <Container maxW={"container.sm"}>
       <VStack spacing={8}>
@@ -57,7 +60,7 @@ const CreatePage = () => {
           shadow={"md"}
         >
           <VStack spacing={4}>
-            <input
+            <Input
               placeholder="Product Name"
               name="name"
               value={newProduct.name}
@@ -65,7 +68,7 @@ const CreatePage = () => {
                 setNewProduct({ ...newProduct, name: e.target.value })
               }
             />
-            <input
+            <Input
               placeholder="Price"
               name="price"
               value={newProduct.price}
@@ -73,7 +76,7 @@ const CreatePage = () => {
                 setNewProduct({ ...newProduct, price: e.target.value })
               }
             />
-            <input
+            <Input
               placeholder="Image URL"
               name="image"
               value={newProduct.image}
@@ -81,7 +84,6 @@ const CreatePage = () => {
                 setNewProduct({ ...newProduct, image: e.target.value })
               }
             />
-
             <Button colorScheme="blue" onClick={handleAddProduct} w="full">
               Add Product
             </Button>
